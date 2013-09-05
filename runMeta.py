@@ -19,14 +19,17 @@ import os
 import numpy as np
 import scipy.stats as stats
 
-
-# used to assess sig in merge
+# used as sig cut off in all lists
 FDR_merge = .1
+# number of tests (or fraction) feature must appear to be merged
 strict_merge = 2
 # used to look at several values in the summary, max is the cutoff for comparisions
 FDR_set = [.05, .1, .2]
+# name of suammry file
 summaryName = 'summary.tsv'
+# name of top merge folder 
 mergeDir = 'featureMerges'
+# name of comparision folder
 compareDir = 'testComparisions'
 
 
@@ -322,12 +325,50 @@ def runComp(data,header,outDir):
 		fout.close()
 
 
+def readParams(fpath):
+	params = {}
+	fin = open(fpath)
+	for line in fin:
+		if line[0]!='#':
+			tmp = line.strip().split('=')
+			params[tmp[0]] = tmp[1]
+
+	return(params)
+
 def main():
+	global FDR_merge
+	global strict_merge
+	global FDR_set
+	global summaryName
+	global mergeDir
+	global compareDir
+
+
+	params_fpath = sys.argv[1] 	
+	params = readParams(params_fpath)
 	
-	finPath = sys.argv[1]
-	outDir = sys.argv[2]
-	tests = int(sys.argv[3])
-	ignore = sys.argv[4].strip().split(',')
+	if params.has_key('FDR_merge'):
+		FDR_merge = float(params['FDR_merge'])
+	if params.has_key('strict_merge'):
+		strict_merge = int(params['strict_merge'])
+	if params.has_key('FDR_set'):
+		FDR_set = np.array(params['FDR_set'].split(','),dtype=float)
+	if params.has_key('summaryName'):
+		summaryName = params['summaryName']
+	if params.has_key('mergeDir'):
+		mergeDir = params['mergeDir']
+	if params.has_key('compareDir'):
+		compareDir = params['compareDir']
+
+
+		
+
+	finPath = params['finPath']
+	outDir = params['outDir']
+	tests = int(params['tests'])
+	if params.has_key('ignore'):
+		ignore = params['ignore'].strip().split(',')
+	else: ignore = ['*']
 	if tests==1: print 'Doing Summary Only'
 	elif tests==2: print 'Doing Summary and Merge'
 	elif tests==3: print 'Doing Summary, Merge and Compare, may take some time'
