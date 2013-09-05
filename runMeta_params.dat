@@ -1,0 +1,23 @@
+# These are manditory
+# name of input file with path if not in same dir
+finPath=regionTest_pValue_20130905.dat
+# name of top level output dir we will create 
+outDir=meta_analysis_20130905
+# an integer to determine what tests will be done 
+# 1 = summary, 2 = 1 + merge, 3 = 2 + comparisions
+tests=3
+# The rest are optional
+# list of terms (present in test ids) to ignore from imput file
+#ignore=
+# used as sig cut off in all lists
+FDR_merge=.1
+# number of tests (or fraction) feature must appear to be merged
+strict_merge=2
+# used to look at several values in the summary, max is the cutoff for comparisions
+FDR_set=.05,.1,.2
+# name of suammry file
+summaryName=summary.tsv
+# name of top merge folder 
+mergeDir=featureMerges
+# name of comparision folder
+compareDir=testComparisions
