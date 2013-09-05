@@ -1,15 +1,30 @@
 import numpy as np
 
-tag = '20130904'
-workingDir = '/titan/cancerregulome9/ITMI_PTB/users/rtasseff/DF4/DF4_2/PPC'
-outDir = workingDir+'/results/regionTests'
+tag = '20130905'
+workingDir = '/titan/cancerregulome9/ITMI_PTB/users/rtasseff/DF4/DF4_2/miRNA'
+outDir = workingDir+'/results'
 index = np.loadtxt(workingDir+'/index.tab',dtype=str)
 names = index[:,0]
 n = len(names)
 
-finName = [ workingDir+'/results/regionTests/regionTest_data_20130830_v0.dat', workingDir+'/results/DF4_2_additional_20130819_hamScat.tsv','/titan/cancerregulome9/ITMI_PTB/users/mmiller/feature_matrix/2013_05_01_df4/2013_07_29_genomic_qc_output/pairwise_test_fm.tsv','/titan/cancerregulome9/ITMI_PTB/users/dgibbs/DF4.2/fbat/regions/fbat_region_combined.txt']
 
 
+finName = [ outDir+'/DF4_2_miRNA_20130905_hamScat.tsv']
+
+
+#
+#tag = '20130904'
+#workingDir = '/titan/cancerregulome9/ITMI_PTB/users/rtasseff/DF4/DF4_2/PPC'
+#outDir = workingDir+'/results/regionTests'
+#index = np.loadtxt(workingDir+'/index.tab',dtype=str)
+#names = index[:,0]
+#n = len(names)
+#
+#
+#
+#finName = [ workingDir+'/results/regionTests/regionTest_data_20130830_v0.dat', workingDir+'/results/DF4_2_additional_20130819_hamScat.tsv','/titan/cancerregulome9/ITMI_PTB/users/mmiller/feature_matrix/2013_05_01_df4/2013_07_29_genomic_qc_output/pairwise_test_fm.tsv','/titan/cancerregulome9/ITMI_PTB/users/dgibbs/DF4.2/fbat/regions/fbat_region_combined.txt']
+#
+#
 
 
 def fdr_bh(p,alpha=.05):
@@ -67,6 +82,7 @@ for i in range(m):
 fout = open(outDir+'/regionTest_pValue_'+tag+'.dat','w')
 fout.write('region_ID')
 for i in range(m):
+	#print finName[i]
 	line = fin[i].next()
 	tmp = line.strip().split('\t')
 	nLabel = len(tmp)
@@ -93,7 +109,7 @@ for i in range(m):
 
 data = np.loadtxt(outDir+'/regionTest_pValue_'+tag+'.dat',dtype=str,delimiter='\t')
 
-colLables = data[1:,:]
+colLables = data[0,1:]
 
 data = np.array(data[1:,1:],dtype=float)
 
@@ -113,7 +129,7 @@ for i in range(m):
 
 
 
-fout = open(outDir+'/regionTest_pValue_'+tag+'.dat','w')
+fout = open(outDir+'/regionTest_qValue_'+tag+'.dat','w')
 fout.write('region_ID\tchr\tstart_pos\tstop_pos')
 for i in range(m):
 	fout.write('\t'+colLables[i])
