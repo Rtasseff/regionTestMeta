@@ -126,7 +126,7 @@ def region2gene_order(regionList):
 
 
 
-def runSumm(data,header,outDir):
+def runSumm(data,header,regionID,outDir):
 	n,m = data.shape
 	# we will want to report which other analysis can be done
 	# currently we do not want to do analysis on usless tests
@@ -140,7 +140,7 @@ def runSumm(data,header,outDir):
 	fout.write('Test_ID')
 	for fdr in FDR_set:
 		fout.write('\t#Genes_FDR='+str(fdr))
-	fout.write('\t1Perc_p\tmin_p')
+	fout.write('\t1Perc_p\tmin_p\tmin_region')
 	fout.write('\n')
 	
 	for i in range(m):
@@ -163,8 +163,9 @@ def runSumm(data,header,outDir):
 		
 		tmp = np.sort(data[notNAN,i])[ind_1Perc]
 		fout.write('\t'+str(tmp))
-		tmp = np.min(data[notNAN,i])
-		fout.write('\t'+str(tmp))
+		tmp = np.argmin(data[notNAN,i])
+		fout.write('\t'+str(data[notNAN,i][tmp]))
+		fout.write('\t'+regionID[notNAN][tmp])
 		fout.write('\n')
 	fout.close()
 	return doComp, doMerg
@@ -404,7 +405,7 @@ def main():
 	fout.write('Ignoring test_ID with any keywords = '+str(ignore)+'.\n')
 
 	
-	doComp, doMerg = runSumm(data,header,outDir)
+	doComp, doMerg = runSumm(data,header,regionID,outDir)
 	fout.write('Ran summary analysis:\n\tResults in '+summaryName+'.\n\tConsidered FDR values of '+str(FDR_set)+'.\n')
 	if tests > 1:
 		runMerg(data[:,doMerg],header[doMerg],regionID,outDir)
